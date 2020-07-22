@@ -1,0 +1,23 @@
+.MinePlayer{clear:both;margin:0 auto !important;background:#000000;font-size:14px;color:#F6F6F6;padding: 0 !important;;position:relative;overflow:hidden;font-family:"宋体";text-shadow:0 0 #000;}
+.MinePlayer a{color:#F6F6F6;text-decoration:none}
+.MinePlayer a:hover{text-decoration: underline;}
+.MinePlayer a:active{text-decoration: none;}
+.MinePlayer table{width:100%;table-layout:fixed;}
+.MinePlayer table tr{border:none !important;}
+.MinePlayer table td,.MinePlayer table th{padding:0 !important;margin:0 !important;vertical-align:top;border:none !important;display: table-cell;background:#000000;}
+.MinePlayer ul,.MinePlayer li,.MinePlayer h2,.playleft iframe,.MinePlayer table,.MinePlayer td,.MinePlayer tbody{ margin:0 !important; padding:0 !important; list-style:none;border:none !important;}
+.MinePlayer table{border-collapse: collapse;border:none !important;}
+.MinePlayer #playtop{text-align:center;height:20px; line-height:21px;font-size:12px;}
+.MinePlayer .topdes{height:26px;line-height:26px;overflow:hidden;text-align:center;}
+.MinePlayer #topleft{width:150px;height:26px;text-align:left;border:none !important;padding:0 !important;margin:0 !important;padding-left:5px}
+.MinePlayer .topright{width:10px;text-align:right;border:none !important;padding:0 !important;margin:0 !important;padding-right:5px !important;}
+.MinePlayer #topcc{width:auto;height:26px;text-align:left;border:none !important;padding:0 !important;margin:0 !important;}
+.MinePlayer .playleft{width:100%;height:100%;overflow:hidden;margin:0 !important;padding:0 !important;text-indent: 0;}
+.MinePlayer .playleft iframe{width:100%;}
+.MineBottomList{display:table;}
+.MineBottomList .result_album{position:relative;*zoom:1;margin:0;padding: 0 !important;}
+.MineBottomList .result_album li{display:inline;float:left;margin-right:10px;padding-bottom:10px}
+.MineBottomList .result_album a{display:block;min-width:42px;height:32px;padding:0 15px !important;;border:1px solid #e1e1e1;background:#fff;line-height:32px;color:#333;position:relative;text-align:center;border-radius:3px;box-shadow:0 1px 1px rgba(239,238,238,.75);text-decoration:none;font-size:12px;}
+.MineBottomList .result_album a.list_on{border:1px solid #222;background:#444;text-decoration:none;color:#fff;font-size:12px;}
+.MineBottomList .result_album a:hover{border:1px solid #222;background:#444;text-decoration:none;color:#fff;font-size:12px;}
+.MineBottomList .result_album a .mark_v{position: absolute;right: 1px;top: 1px;}
