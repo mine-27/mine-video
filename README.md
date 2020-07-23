@@ -10,9 +10,9 @@
 6. 支持直播源；
 
 # 安装说明
-1、把mine-video文件夹上传到/wp-content/plugins/目录下
-2、在后台插件列表中激活mine video player
-3、在“Mine视频播放”菜单中输入相关设置信息
+1、把mine-video文件夹上传到/wp-content/plugins/目录下；
+2、在后台插件列表中激活mine video player；
+3、在“Mine视频播放”菜单中输入相关设置信息；
 
 # Changelog
 版本2.5
