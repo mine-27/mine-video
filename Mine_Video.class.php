@@ -18,6 +18,7 @@ class Mine_Video{
 	public function minevideo_admin_style(){
 		wp_enqueue_style('mine_setting_layui',  MINEVIDEO_URL.'/js/layui/css/layui.css');
 		wp_enqueue_script('mine_setting_layuijs', MINEVIDEO_URL.'/js/layui/layui.js');
+		wp_add_inline_script('mine_setting_layuijs','layui.use([\'form\', \'element\'], function(){var $ = layui.jquery,element = layui.element,form = layui.form;});');
 	}
 
 	public function add_minevideo_tinymce_plugin($plugins) {
@@ -113,13 +114,6 @@ class Mine_Video{
 	</div>
 
 	</form>
-	<script>
-	layui.use(['form', 'element'], function(){
-		var $ = layui.jquery
-		,element = layui.element
-		,form = layui.form; 
-	});
-	</script>
 	</div>
 	<?php
 	}
