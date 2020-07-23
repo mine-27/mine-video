@@ -16,7 +16,7 @@ define('MINEVIDEO_ADMINURL', admin_url());
 
 require MINEVIDEO_PATH . '/Mine_Video.class.php';
 
-$action = isset($_GET['action'])?$_GET['action']:'';
+$action = isset($_GET['action'])?sanitize_text_field($_GET['action']):'';
 switch($action){
 	case 'win':
 		include 'mine-win.php';
@@ -26,5 +26,5 @@ switch($action){
 if (class_exists('Mine_Video')) {
 	$minevideo = new Mine_Video();
 }
-
+require_once plugin_dir_path( __FILE__ ) . 'update.php';
 ?>

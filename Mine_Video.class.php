@@ -3,6 +3,7 @@ class Mine_Video{
 	public function __construct(){
 		add_action('admin_menu',			array($this, 'minevideo_admin_menu'));//admin menu
 		add_action('admin_init',			array($this, 'minevideo_admin_style'));// admin style
+		add_action('wp_enqueue_scripts',	array($this, 'minevideo_scripts'));
 		add_shortcode('mine_video',			array($this, 'minevideo_shortcode'));//register shortcode
 		add_filter("mce_external_plugins",	array($this, "add_minevideo_tinymce_plugin"), 9999);
 		add_filter('mce_buttons',			array($this, 'register_minevideo_button'), 9999);
@@ -177,10 +178,8 @@ live==直播==dplayer_live');
 			$vidlen = count($vidgroup);
 			if($typelen == 1 && $vidlen == 1) $vgshoworhide = 'display:none;';
 			$jxapi_cur = trim($parr[$typearr[$ti].'_api']?$parr[$typearr[$ti].'_api']:$mine_video_player_jxapi);
-			$isurlencode = true;
 			if($jxapi_cur == 'self'){
 					$jxapi_cur = '{vid}';
-					$isurlencode = false;
 			}
 			
 			for($vi=0;$vi<$vidlen;$vi++){
@@ -190,31 +189,49 @@ live==直播==dplayer_live');
 					$vidtemp[0]='第'.(intval($vi+0)<9?'0':'') . ($vi+1).'集';
 				}
 				$vlid = $vi;
-				if(count($vlistarr[$typearr[$ti]])>$vi){
+				if(isset($vlistarr[$typearr[$ti]]) && count($vlistarr[$typearr[$ti]])>$vi){
 					$vlid = count($vlistarr[$typearr[$ti]]);
 				}
-				$vlistarr[$typearr[$ti]][] = array('id'=>$vlid, 'pre'=>$vidtemp[0],'video'=>($isurlencode?urlencode($vidtemp[1]):$vidtemp[1]));
+				$vlistarr[$typearr[$ti]][] = array('id'=>$vlid, 'pre'=>$vidtemp[0],'video'=>$vidtemp[1]);
 				$vliststr .= '<li><a href="javascript:void(0)" onclick="MP_'.$r.'.Go('.$vlid.', \''.$typearr[$ti].'\');return false;">'.$vidtemp[0].'</a></li>';
 			}
 			$vliststr .= '</ul></div></div>';
 			switch($jxapi_cur){
 				case 'dplayer':
-					$jxapistr .= '<link href="'.MINEVIDEO_URL.'/dplayer/CBPlayer.min.css" rel="stylesheet"><script src="'.MINEVIDEO_URL.'/dplayer/hlsjs-p2p-engine.min.js"></script><script src="'.MINEVIDEO_URL.'/dplayer/hls.js"></script><script src="'.MINEVIDEO_URL.'/dplayer/cbplayer2@latest.js"></script><input type="hidden" id="mine_ifr_'.$typearr[$ti].'_'.$r.'" value=\'dplayer\'/>';
-					break;
 				case 'dplayer_live':
-					$jxapistr .= '<link href="'.MINEVIDEO_URL.'/dplayer/CBPlayer.min.css" rel="stylesheet"><script src="'.MINEVIDEO_URL.'/dplayer/hlsjs-p2p-engine.min.js"></script><script src="'.MINEVIDEO_URL.'/dplayer/hls.js"></script><script src="'.MINEVIDEO_URL.'/dplayer/cbplayer2@latest.js"></script><input type="hidden" id="mine_ifr_'.$typearr[$ti].'_'.$r.'" value=\'dplayer_live\'/>';
+					$this->minevideo_dplayer_scripts();
+					$jxapistr .= '<input type="hidden" id="mine_ifr_'.$typearr[$ti].'_'.$r.'" value=\''.$jxapi_cur.'\'/>';
 					break;
 				default:
 					$jxapistr .= '<input type="hidden" id="mine_ifr_'.$typearr[$ti].'_'.$r.'" value=\'<i'.'fr'.'ame border="0" src="'.$jxapi_cur.'" width="100%" height="'.$h.'" marginwidth="0" framespacing="0" marginheight="0" frameborder="0" scrolling="no" vspale="0" noresize="" allowfullscreen="true" id="minewindow_'.$typearr[$ti].'_'.$r.'"></'.'if'.'rame>\'/>';
 			}
 		}
 		
-		$style = '<link rel="stylesheet" id="minevideo-css" href="'.MINEVIDEO_URL.'/css/minevideo.css?v='.MINEVIDEO_VERSION.'" type="text/css" media="all" />';
-		$script = '<script type="text/javascript">var mine_di_'.$r.'="第",mine_ji_'.$r.'="集",mine_playing_'.$r.'="正在播放 ";var minevideo_type_'.$r.'="'.$type.'";</script><script>var minevideo_vids_'.$r.'='.json_encode($vlistarr).';var MP_'.$r.' = new MinePlayer('.$r.');MP_'.$r.'.Go(0);</script>';
-		$player = '<div id="MinePlayer_'.$r.'" class="MinePlayer"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr'.($mine_video_playertop=='show'?'':' style="display:none;"').'><td height="26"><table border="0" cellpadding="0" cellspacing="0" id="playtop_'.$r.'" class="playtop"><tbody><tr><td id="topleft"><a target="_self" href="javascript:void(0)" onclick="MP_'.$r.'.GoPreUrl();return false;">上一集</a> <a target="_self" href="javascript:void(0)" onclick="MP_'.$r.'.GoNextUrl();return false;">下一集</a></td><td id="topcc"><div id="topdes_'.$r.'" class="topdes">正在播放</div></td><td id="topright_'.$r.'" class="topright"></td></tr></tbody></table></td></tr><tr><td><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td id="playleft_'.$r.'" class="playleft" valign="top" style="height:'.$h.'px;"></td><td id="playright_'.$r.'" valign="top"></td></tr></tbody></table></td></tr></tbody></table></div>'.$jxapistr.'<link rel="stylesheet" type="text/css" href="'.MINEVIDEO_URL.'/js/layui/css/layui.css" /><div class="layui-tab layui-tab-brief" lay-filter="videoGroup" style="margin:10px auto;'.$vgshoworhide.'"><ul class="layui-tab-title">'.$typestr.'</ul><div class="layui-tab-content" style="height: auto;padding-left:0;">'.$vliststr.'</div></div><script src="'.MINEVIDEO_URL.'/js/layui/layui.js"></script><script type="text/javascript" src="'.MINEVIDEO_URL.'/js/mineplayer.js?v='.MINEVIDEO_VERSION.'" charset="UTF-8"></script><script>layui.use(\'element\', function(){var $ = layui.jquery,element = layui.element;$(".layui-tab-content a").click(function(){$(".layui-tab-content a").removeClass("list_on");$(this).addClass("list_on");});});</script>';
-		return $style.$player.$script;
+		
+		wp_enqueue_script('mine_video_player', MINEVIDEO_URL.'/js/mineplayer.js',  MINEVIDEO_URL, MINEVIDEO_VERSION , false );
+		wp_add_inline_script('mine_video_player', 'var mine_di_'.$r.'="第",mine_ji_'.$r.'="集",mine_playing_'.$r.'="正在播放 ";var minevideo_type_'.$r.'="'.$type.'";var minevideo_vids_'.$r.'='.json_encode($vlistarr).';var MP_'.$r.' = new MinePlayer('.$r.');MP_'.$r.'.Go(0);');
+		$player = '<div id="MinePlayer_'.$r.'" class="MinePlayer"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr'.($mine_video_playertop=='show'?'':' style="display:none;"').'><td height="26"><table border="0" cellpadding="0" cellspacing="0" id="playtop_'.$r.'" class="playtop"><tbody><tr><td id="topleft"><a target="_self" href="javascript:void(0)" onclick="MP_'.$r.'.GoPreUrl();return false;">上一集</a> <a target="_self" href="javascript:void(0)" onclick="MP_'.$r.'.GoNextUrl();return false;">下一集</a></td><td id="topcc"><div id="topdes_'.$r.'" class="topdes">正在播放</div></td><td id="topright_'.$r.'" class="topright"></td></tr></tbody></table></td></tr><tr><td><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td id="playleft_'.$r.'" class="playleft" valign="top" style="height:'.$h.'px;"></td><td id="playright_'.$r.'" valign="top"></td></tr></tbody></table></td></tr></tbody></table></div>'.$jxapistr.'<div class="layui-tab layui-tab-brief" lay-filter="videoGroup" style="margin:10px auto;'.$vgshoworhide.'"><ul class="layui-tab-title">'.$typestr.'</ul><div class="layui-tab-content" style="height: auto;padding-left:0;">'.$vliststr.'</div></div>';
+		
+		return $player;
 	}
-
+	public function minevideo_scripts(){
+		global $posts;
+		foreach($posts as $post){
+			if(has_shortcode($post->post_content, 'mine_video')){
+				wp_enqueue_style( 'mine_video_layuicss', MINEVIDEO_URL.'/js/layui/css/layui.css',  array(), MINEVIDEO_VERSION);
+				wp_enqueue_style( 'mine_video_css', MINEVIDEO_URL.'/css/minevideo.css',  array(), MINEVIDEO_VERSION);
+				wp_enqueue_style('mine_dplayer_css', MINEVIDEO_URL.'/dplayer/CBPlayer.min.css', MINEVIDEO_URL, false);
+				wp_enqueue_script('mine_video_layuijs', MINEVIDEO_URL.'/js/layui/layui.js',  MINEVIDEO_URL, MINEVIDEO_VERSION , false );
+				wp_add_inline_script('mine_video_layuijs', 'layui.use(\'element\', function(){var $ = layui.jquery,element = layui.element;$(".layui-tab-content a").click(function(){$(".layui-tab-content a").removeClass("list_on");$(this).addClass("list_on");});});');
+				break;
+			}
+		}
+	}
+	public function minevideo_dplayer_scripts(){
+		wp_enqueue_script('mine_dplayer_p2p-engine', MINEVIDEO_URL.'/dplayer/hlsjs-p2p-engine.min.js',  MINEVIDEO_URL, MINEVIDEO_VERSION , false );
+		wp_enqueue_script('mine_dplayer_hls', MINEVIDEO_URL.'/dplayer/hls.js',  MINEVIDEO_URL, MINEVIDEO_VERSION , false );
+		wp_enqueue_script('mine_dplayer_2', MINEVIDEO_URL.'/dplayer/cbplayer2@latest.js',  MINEVIDEO_URL, MINEVIDEO_VERSION , false );
+	}
 	public function minevideo_get_players($players){
 		$players = explode("\n", $players);
 		$arr = array();

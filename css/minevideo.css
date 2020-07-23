@@ -21,3 +21,6 @@
 .MineBottomList .result_album a.list_on{border:1px solid #222;background:#444;text-decoration:none;color:#fff;font-size:12px;}
 .MineBottomList .result_album a:hover{border:1px solid #222;background:#444;text-decoration:none;color:#fff;font-size:12px;}
 .MineBottomList .result_album a .mark_v{position: absolute;right: 1px;top: 1px;}
+
+.layui-tab-title{margin:0 !important;}
+.layui-tab-title li{margin: 0 !important;padding: 0 15px !important;line-height:40px !important;}
